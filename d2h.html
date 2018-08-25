@@ -1,0 +1,116 @@
+﻿<html>
+<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1"> 
+<head>
+<title>Conversão de horas</title>
+<style>	
+	body {
+		font-family: "Verdana";
+		font-size: "12pt";
+	}
+	.input_class {
+		font-family: "Verdana";
+		font-size: 24pt;
+		border-top: 1px solid lightslategray;
+		border-bottom: 1px solid lightslategray;
+		border-left: 1px solid lightslategray;
+		border-right: 1px solid lightslategray;
+		text-align: center;
+	}
+	.result {
+		font-size: 24pt; 
+		color: cadetblue;
+		text-align: center;
+	}
+	.btn_style {
+		font-size: 24pt;
+		border: none;
+		background-color: transparent;
+	}
+	.btn_style:hover{
+		background-color: lightblue;
+		border-top: 1px solid dodgerblue;
+		border-bottom: 1px solid dodgerblue;
+		border-left: 1px solid dodgerblue;
+		border-right: 1px solid dodgerblue;
+	}
+	h1 {
+		text-align: center;
+	}
+	p {
+		text-align: center;
+	}
+	.elemento {
+		text-align: center;
+	}
+</style>
+</head>
+<body>
+	<h1>Conversão de horas</h1>
+	<p>Digite a duração no formato HH:MM ou decimal nn,nnn:</p>
+	<div class="elemento"><input id="txtElapsed" size="10" class="input_class" /><br />
+	<button id="btnAction" type="button"
+		    onclick="convert()"
+			class="btn_style">
+			Converter</button></div>
+	<p id="changeText" class="result" />
+	<script>
+		// Converte horas
+		function convert() {
+			var _elapsed = document.getElementById("txtElapsed").value;
+			
+			if(_elapsed.indexOf(":") >= 0)
+				h2d(_elapsed);
+				
+			else if(_elapsed.indexOf(",") >= 0)
+				d2h(_elapsed);
+				
+			else {
+				document.getElementById("changeText").innerHTML = "Informe um valor correto.";
+			}
+		}
+		
+		function h2d(_elapsed){
+			var _arr = _elapsed.split(":");
+			
+			if(_arr.length != 2) {
+			   document.getElementById("changeText").innerHTML = "Informe um valor correto.";
+			   return;
+			}
+			   
+			var _hour = parseFloat(_arr[0]);
+			_hour += parseInt(_arr[1]) / 60;			
+			document.getElementById("changeText").innerHTML = _hour.toPrecision(4);
+		}
+		
+		function d2h(_elapsed){
+			var _arr = _elapsed.split(",");
+			
+			if(_arr.length != 2) {
+			   document.getElementById("changeText").innerHTML = "Informe um valor correto.";
+			   return;
+			}
+			
+			var _hour = _arr[0];
+			var _min = parseFloat("0." + _arr[1]);
+			_min *= parseFloat(0.6) * parseFloat(100);
+			_min = parseInt(_min);
+			document.getElementById("changeText").innerHTML = _hour + ":" + lpad(_min.toString(), "0",2);
+		}
+		
+		//pads left
+		function lpad(str, padString, length) {
+			while (str.length < length)
+				str = padString + str;
+			return str;
+		}
+		
+		//pads right
+		function rpad(str, padString, length) {
+			while (str.length < length)
+				str = str + padString;
+			return str;
+		}
+	</script>
+</body>
+
+</html>
