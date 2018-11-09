@@ -44,6 +44,32 @@ namespace agenda.Controllers
             return GetListByDate(dateIni, dateEnd);
         }
 
+        // GET http://localhost:59475/api/schedule/dateandowner?date=2018-09-10&name=Abbott,%20Ima%20A.
+        [HttpGet("DateAndOwner")]
+        public IEnumerable<Schedule> GetByDateAndName([FromQuery]string date, [FromQuery]string name)
+        {
+            if (string.IsNullOrEmpty(date) || string.IsNullOrEmpty(name))
+            {
+                return null;
+            }
+
+            DateTime dateIni;
+            DateTime dateEnd;
+
+            if (!DateTime.TryParse(date, out dateIni))
+            {
+                return null;
+            }
+
+            dateEnd = new DateTime(dateIni.Year, dateIni.Month, dateIni.Day, 23, 59, 59);
+            string sql = "select * from users_schedules where StartDate between @StartDateIni and @StartDateEnd and [owner] = @owner";
+
+            using (var conn = new SqlConnection(ConfigHelper.ConnectionString))
+            {
+                return conn.Query<Schedule>(sql, new { StartDateIni = dateIni, StartDateEnd = dateEnd, owner = name }).ToList();
+            }
+        }
+
         List<Schedule> GetLastHundreds()
         {
             string sql = "select top 100 * from users_schedules order by id desc";
