@@ -44,9 +44,50 @@ namespace agenda.Controllers
             return GetListByDate(dateIni, dateEnd);
         }
 
+        // GET http://localhost:59475/api/schedule/consulta2?startDate=2018-09-10&endDate=2018-09-30&owner=Abbott,%20Ima%20A.
+        [HttpGet("consulta2")]
+        public IEnumerable<Schedule> newQuery([FromQuery]string startDate, [FromQuery]string endDate, [FromQuery]string owner)
+        {
+            if (string.IsNullOrEmpty(startDate) || string.IsNullOrEmpty(endDate))
+            {
+                return null;
+            }
+
+            if(string.IsNullOrEmpty(startDate) && string.IsNullOrEmpty(endDate) && string.IsNullOrEmpty(owner))
+            {
+                return null;
+            }
+
+            DateTime dateIni;
+            DateTime dateEnd;
+
+            if (!DateTime.TryParse(startDate, out dateIni))
+            {
+                return null;
+            }
+
+            if (!DateTime.TryParse(endDate, out dateEnd))
+            {
+                return null;
+            }
+
+            var sql = "select * from users_schedules where StartDate between @Date1 and @Date2 " + 
+                (!string.IsNullOrEmpty(owner) ? " and (owner like '" + owner + "%' or owner like '%" + owner + "')" : "");
+
+            using (var conn = new SqlConnection(ConfigHelper.ConnectionString))
+            {
+                return conn.Query<Schedule>(sql, 
+                new 
+                    { 
+                        Date1 = dateIni, 
+                        Date2 = dateEnd
+                    }).ToList();
+            }
+        }
+
         // GET http://localhost:59475/api/schedule/dateandowner?date=2018-09-10&name=Abbott,%20Ima%20A.
         [HttpGet("DateAndOwner")]
-        public IEnumerable<Schedule> GetByDateAndName([FromQuery]string date, [FromQuery]string name)
+        public IEnumerable<Schedule> GetByDateAndOwner([FromQuery]string date, [FromQuery]string name)
         {
             if (string.IsNullOrEmpty(date) || string.IsNullOrEmpty(name))
             {
