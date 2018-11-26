@@ -13,6 +13,19 @@ namespace agenda.Controllers
     [Route("api/schedule")]
     public class ScheduleController : Controller
     {
+        [HttpPost(Name ="Post")]
+        public IActionResult Post([FromBody]Schedule schedule)
+        {
+            if (InsertItem(schedule))
+            {
+                return CreatedAtRoute("Post", new { Result = "Success" });
+            }
+            else
+            {
+                return CreatedAtRoute("Get", new { Result = "Fail" });
+            }
+        }
+
         [HttpGet]
         public IEnumerable<Schedule> Get()
         {
@@ -111,24 +124,48 @@ namespace agenda.Controllers
             }
         }
 
+        #region private methods
         List<Schedule> GetLastHundreds()
         {
             string sql = "select top 100 * from users_schedules order by id desc";
 
-            using(var conn = new SqlConnection(ConfigHelper.ConnectionString))
+            using (var conn = new SqlConnection(ConfigHelper.ConnectionString))
             {
                 var lst = conn.Query<Schedule>(sql).ToList();
                 return lst;
             }
         }
 
-        List<Schedule> GetListByDate(DateTime dateIni, DateTime dateEnd){
+        List<Schedule> GetListByDate(DateTime dateIni, DateTime dateEnd)
+        {
             string sql = "select * from users_schedules where StartDate between @StartDateIni and @StartDateEnd";
 
-            using(var conn = new SqlConnection(ConfigHelper.ConnectionString))
+            using (var conn = new SqlConnection(ConfigHelper.ConnectionString))
             {
                 return conn.Query<Schedule>(sql, new { StartDateIni = dateIni, StartDateEnd = dateEnd }).ToList();
             }
         }
+
+        bool InsertItem(Schedule schedule)
+        {
+            string sql = "insert into users_schedules (StartDate, EndDate, Owner, Title, Description) " +
+               "values (@StartDate, @EndDate, @Owner, @Title, @Description)";
+
+            using (var conn = new SqlConnection(ConfigHelper.ConnectionString))
+            {
+                conn.Execute(sql,
+                    new
+                    {
+                        StartDate = schedule.StartDate,
+                        EndDate = schedule.EndDate,
+                        Owner = schedule.Owner,
+                        Title = schedule.Title,
+                        Description = schedule.Description
+                    });
+
+                return true;
+            }
+        } 
+        #endregion
     }
 }
