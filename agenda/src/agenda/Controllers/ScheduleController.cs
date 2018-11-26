@@ -16,13 +16,23 @@ namespace agenda.Controllers
         [HttpPost(Name ="Post")]
         public IActionResult Post([FromBody]Schedule schedule)
         {
-            if (InsertItem(schedule))
-            {
-                return CreatedAtRoute("Post", new { Result = "Success" });
+            if (schedule.Id == 0){
+                if (InsertItem(schedule))
+                {
+                    return CreatedAtRoute("Post", new { Result = "Success" });
+                }
+                else
+                {
+                    return CreatedAtRoute("Get", new { Result = "Fail" });
+                }
             }
-            else
+            else 
             {
-                return CreatedAtRoute("Get", new { Result = "Fail" });
+                if (UpdateItem(schedule)) {
+                    return CreatedAtRoute("Post", new { Result = "Sucess"});
+                } else {
+                    return CreatedAtRoute("Get", new { Result = "Fail" });
+                }
             }
         }
 
@@ -164,6 +174,35 @@ namespace agenda.Controllers
                     });
 
                 return true;
+            }
+        } 
+
+        bool UpdateItem(Schedule schedule)
+        {
+            string sql = @"
+                update users_schedules
+                set StartDate = @StartDate,
+                    EndDate = @EndDate,
+                    Owner = @Owner,
+                    Title = @Title,
+                    Description = @Description
+                where id = @Id
+            ";
+
+            using (var conn = new SqlConnection(ConfigHelper.ConnectionString))
+            {
+                conn.Execute(sql,
+                    new
+                    {
+                        Id = schedule.Id,
+                        StartDate = schedule.StartDate,
+                        EndDate = schedule.EndDate,
+                        Owner = schedule.Owner,
+                        Title = schedule.Title,
+                        Description = schedule.Description
+                    });
+
+                  return true;
             }
         } 
         #endregion
