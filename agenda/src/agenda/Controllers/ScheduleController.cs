@@ -13,26 +13,25 @@ namespace agenda.Controllers
     [Route("api/schedule")]
     public class ScheduleController : Controller
     {
+        [HttpPut("{Id}")]
+        public IActionResult Update(Int32 id, [FromBody] Schedule schedule){
+            if (UpdateItem(schedule)) {
+                return CreatedAtRoute("Post", new { Result = "Sucess", Operation = "Update"});
+            } else {
+                return CreatedAtRoute("Get", new { Result = "Fail" });
+            }
+        }
+
         [HttpPost(Name ="Post")]
         public IActionResult Post([FromBody]Schedule schedule)
         {
-            if (schedule.Id == 0){
-                if (InsertItem(schedule))
-                {
-                    return CreatedAtRoute("Post", new { Result = "Success" });
-                }
-                else
-                {
-                    return CreatedAtRoute("Get", new { Result = "Fail" });
-                }
-            }
-            else 
+            if (InsertItem(schedule))
             {
-                if (UpdateItem(schedule)) {
-                    return CreatedAtRoute("Post", new { Result = "Sucess"});
-                } else {
-                    return CreatedAtRoute("Get", new { Result = "Fail" });
-                }
+                return CreatedAtRoute("Post", new { Result = "Success" });
+            }
+            else
+            {
+                return CreatedAtRoute("Get", new { Result = "Fail" });
             }
         }
 
