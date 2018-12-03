@@ -13,6 +13,15 @@ namespace agenda.Controllers
     [Route("api/schedule")]
     public class ScheduleController : Controller
     {
+        [HttpDelete("{Id}")]
+        public IActionResult Delete(Int32 id){
+
+            if (DeleteItem(id))
+                return Ok(new { Result = "Sucess", Operation = "Delete"});
+            else
+                return Ok(new { Result = "Fail", Operation = "Delete"});
+        }
+
         [HttpPut("{Id}")]
         public IActionResult Update(Int32 id, [FromBody] Schedule schedule){
             if (UpdateItem(schedule)) {
@@ -203,7 +212,22 @@ namespace agenda.Controllers
 
                   return true;
             }
-        } 
+        }
+
+        bool DeleteItem(Int32 id) {
+            string sql = "delete from users_schedules where id = @Id";
+
+            using (var conn = new SqlConnection(ConfigHelper.ConnectionString))
+            {
+                conn.Execute(sql,
+                    new
+                    {
+                        Id = id
+                    });
+            }
+
+            return true;
+        }
         #endregion
     }
 }
