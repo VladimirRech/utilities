@@ -16,9 +16,9 @@ namespace agenda.Controllers
         [HttpPut("{Id}")]
         public IActionResult Update(Int32 id, [FromBody] Schedule schedule){
             if (UpdateItem(schedule)) {
-                return CreatedAtRoute("Post", new { Result = "Sucess", Operation = "Update"});
+                return Ok(new { Result = "Sucess", Operation = "Update"});
             } else {
-                return CreatedAtRoute("Get", new { Result = "Fail" });
+                return Ok(new { Result = "Fail" });
             }
         }
 
