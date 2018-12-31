@@ -1,0 +1,55 @@
+{
+    "name":"form1",
+    "text":"Primeiro formulário",
+    "type":"OK|YesNo",
+    "controls":[
+        {
+            "name":"txtText1",
+            "type":"TextBox",
+            "key":"text1",
+            "label":"Campo texto",
+            "initialValue":"Some text"
+        },
+        {
+            "name":"cboName",
+            "type":"ComboBox",
+            "key":"name1",
+            "label":"Campo múltipla escolha",
+            "initialValue":"1",
+            "bindingSource": {
+                "connection":"Data source=local; Initial catalog=databasename; Integrated security=true;",
+                "sql":"SELECT ID, NAME FROM USERS ORDER BY NAME",
+                "keyValue":"id",
+                "displayValue":"name"
+            }
+        },
+        {
+            "name":"cboName2",
+            "type":"ComboBox",
+            "key":"options",
+            "label":"Tipo do relatório",
+            "initialValue":"Geral",
+            "bindingSource": {
+                "connection":"",
+                "sql":"",
+                "keyValue":"",
+                "displayValue":"",
+                "items":"Geral;Parcial;"
+            }
+        },
+        {
+            "name":"dtDate1",
+            "type":"DateTimeControl",
+            "key":"date1",
+            "label":"Data de início",
+            "initialValue":"2018-12-31"
+        },
+        {
+            "name":"chkCheckBox",
+            "type":"CheckBoxControl",
+            "key":"boolValue1",
+            "label":"Valor lógico",
+            "initialValue":"true"
+        }
+    ]
+}
