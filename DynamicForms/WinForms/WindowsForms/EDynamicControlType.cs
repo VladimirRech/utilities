@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace WindowsForms
 {
+    [Serializable]
     public enum EDynamicControlType
     {
         TEXT_BOX,

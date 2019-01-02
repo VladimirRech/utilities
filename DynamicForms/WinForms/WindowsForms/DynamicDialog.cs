@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
@@ -12,9 +13,13 @@ namespace WindowsForms
     [Serializable]
     public class DynamicDialog
     {
+        [Required]
         public string FormName { get; set; }
+        [Required]
         public string Text { get; set; }
+        [Required]
         public EDialogType DialogType { get; set; }
+        [Required]
         public List<DynamicControl> DynamicControls { get; set; }
 
         // Fields
