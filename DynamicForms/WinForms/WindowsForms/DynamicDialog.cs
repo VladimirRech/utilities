@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Script.Serialization;
 using System.Linq;
 using System.Text;
 
@@ -24,6 +25,29 @@ namespace WindowsForms
 
         // Fields
         DynamicForm _DynamicForm;
+
+        public static DynamicDialog GetFromJson(string json, out string error)
+        {
+            error = string.Empty;
+            DynamicDialog ret = null;
+
+            if (string.IsNullOrEmpty(json))
+            {
+                error = "A empty JSON was sent to service.";
+                return ret;
+            }
+
+            try
+            {
+                ret = new JavaScriptSerializer().Deserialize<DynamicDialog>(json);
+            }
+            catch (Exception ex)
+            {
+                error = string.Format("The content of JSON is invalid.\n{0}", ex.Message);
+            }
+
+            return ret;
+        }
 
         /// <summary>
         /// Builds and show the dynamic form
