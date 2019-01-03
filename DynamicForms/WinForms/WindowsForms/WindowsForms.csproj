@@ -53,7 +53,6 @@
     <Compile Include="DynamicForm.Designer.cs">
       <DependentUpon>DynamicForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="EDynamicControlType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

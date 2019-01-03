@@ -1,30 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Web.Script.Serialization;
 using System.Linq;
-using System.Text;
+using System.Web.Script.Serialization;
 
 namespace WindowsForms
 {
     /// <summary>
     /// Class to build a dynamic form
     /// </summary>
-    /// 
     [Serializable]
     public class DynamicDialog
     {
-        [Required]
-        public string FormName { get; set; }
-        [Required]
-        public string Text { get; set; }
-        [Required]
-        public EDialogType DialogType { get; set; }
-        [Required]
-        public List<DynamicControl> DynamicControls { get; set; }
-
-        // Fields
+        #region fields
+        string _dialogType;
+        IEnumerable<string> _validDialogTypes = new List<string>() { "OK", "YesNo" };
         DynamicForm _DynamicForm;
+        #endregion
+
+        #region properties
+        public string FormName { get; set; }
+        public string Text { get; set; }
+        public string DialogType
+        {
+            get { return _dialogType; }
+            set
+            {
+                if (_validDialogTypes.Contains(value))
+                {
+                    _dialogType = value;
+                }
+                else
+                {
+                    throw new Exception("Dialog type is not valid.\nCurrent valid types are:\n\n\t\"OK\" and \"YesNo\"");
+                }
+            }
+        }
+
+        public List<DynamicControl> DynamicControls { get; set; } 
+        #endregion
 
         public static DynamicDialog GetFromJson(string json, out string error)
         {
@@ -67,6 +80,4 @@ namespace WindowsForms
             return null;
         }
     }
-
-    public enum EDialogType { EOkDialog, EYesNoDialog }
 }
