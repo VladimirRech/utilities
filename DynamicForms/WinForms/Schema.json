@@ -39,14 +39,14 @@
         },
         {
             "name":"dtDate1",
-            "type":"DateTimeControl",
+            "type":"DateTime",
             "key":"date1",
             "label":"Data de início",
             "initialValue":"2018-12-31"
         },
         {
             "name":"chkCheckBox",
-            "type":"CheckBoxControl",
+            "type":"CheckBox",
             "key":"boolValue1",
             "label":"Valor lógico",
             "initialValue":"true"

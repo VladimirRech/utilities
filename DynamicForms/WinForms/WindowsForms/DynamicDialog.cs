@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace WindowsForms
 {
@@ -18,8 +18,11 @@ namespace WindowsForms
         #endregion
 
         #region properties
+        [JsonProperty(PropertyName = "name")]
         public string FormName { get; set; }
+        [JsonProperty(PropertyName = "text")]
         public string Text { get; set; }
+        [JsonProperty(PropertyName = "type")]
         public string DialogType
         {
             get { return _dialogType; }
@@ -35,8 +38,8 @@ namespace WindowsForms
                 }
             }
         }
-
-        public List<DynamicControl> DynamicControls { get; set; } 
+        [JsonProperty(PropertyName = "controls")]
+        public List<DynamicControl> DynamicControls { get; set; }
         #endregion
 
         public static DynamicDialog GetFromJson(string json, out string error)
@@ -52,7 +55,7 @@ namespace WindowsForms
 
             try
             {
-                ret = new JavaScriptSerializer().Deserialize<DynamicDialog>(json);
+                ret = JsonConvert.DeserializeObject<DynamicDialog>(json);
             }
             catch (Exception ex)
             {

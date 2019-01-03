@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,7 +23,9 @@ namespace WindowsForms
         #endregion
 
         #region properties
+        [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
+        [JsonProperty(PropertyName = "type")]
         public string ControlType
         {
             get { return _controlType; }
@@ -38,9 +41,13 @@ namespace WindowsForms
                 }
             }
         }
+        [JsonProperty(PropertyName = "key")]
         public string Key { get; set; }
-        public string label { get; set; }
+        [JsonProperty(PropertyName = "label")]
+        public string Label { get; set; }
+        [JsonProperty(PropertyName = "initialValue")]
         public object InitialValue { get; set; }
+        [JsonProperty(PropertyName = "bindingSource")]
         public DynamicControlBinding BindingSource { get; set; }
         #endregion
     }
