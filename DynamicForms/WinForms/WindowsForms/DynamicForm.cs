@@ -8,7 +8,10 @@ namespace WindowsForms
     {
         List<DynamicControl> _dynamicControls;
         Dictionary<string, object> _returnValues;
-        int MAXHEIGHT = 600;
+        int _labelWidth = 150;
+        int _controlWidth = 350;
+        int _panelOffset = 20;
+        int _controlOffset = 2;
 
         public DynamicForm(List<DynamicControl> dynamicControls)
         {
@@ -29,22 +32,27 @@ namespace WindowsForms
 
         private void CreateDynamicControls()
         {
-            System.Drawing.Point lastLocation = panel1.Location;
+            System.Drawing.Point lastLocation = new System.Drawing.Point(panel1.Location.X, panel1.Location.Y);
             lastLocation.X += 5;
             lastLocation.Y += 5;
+            int controlsTotalHeight = panel1.Height;
             
             foreach(DynamicControl ctr in _dynamicControls)
             {
-                var lbl = new Label { Text = ctr.Label, Width = 300, AutoSize = false, Location = lastLocation };
+                var lbl = new Label { Text = ctr.Label, Width = _labelWidth, AutoSize = false, Location = lastLocation };
                 var winCtr = GetControl(ctr, lastLocation);
 
                 if (winCtr != null)
                 {
                     panel1.Controls.Add(lbl);
                     panel1.Controls.Add(winCtr);
-                    lastLocation.Y += winCtr.Location.Y + winCtr.Height + 2;
+                    lastLocation.Y = winCtr.Location.Y + winCtr.Height + 2;
+                    controlsTotalHeight += winCtr.Height + _controlOffset;
                 }
             }
+
+            Height = controlsTotalHeight + (_panelOffset * 2) + btnOk.Height + _controlOffset;
+            Width = _labelWidth + _controlWidth + (_controlOffset * 2) + (_panelOffset * 5);
         }
 
         private Control GetControl(DynamicControl ctr, System.Drawing.Point lastLocation)
@@ -58,8 +66,9 @@ namespace WindowsForms
                     {
                         Tag = ctr.Key,
                         Name = ctr.Name,
-                        Location = new System.Drawing.Point(lastLocation.X + 2, lastLocation.Y),
-                        Text = ctr.InitialValue.ToString()
+                        Location = new System.Drawing.Point(lastLocation.X + _labelWidth+ 2, lastLocation.Y),
+                        Text = ctr.InitialValue.ToString(),
+                        Width = _controlWidth
                     };
 
                     _returnValues.Add(ctr.Key, null);
@@ -70,7 +79,8 @@ namespace WindowsForms
                     {
                         Tag = ctr.Key,
                         Name = ctr.Name,
-                        Location = new System.Drawing.Point(lastLocation.X + 2, lastLocation.Y)
+                        Location = new System.Drawing.Point(lastLocation.X + _labelWidth + 2, lastLocation.Y),
+                        Width = _controlWidth
                     };
 
                     _returnValues.Add(ctr.Key, null);
@@ -87,9 +97,10 @@ namespace WindowsForms
                     {
                         Tag = ctr.Key,
                         Name = ctr.Name,
-                        Location = new System.Drawing.Point(lastLocation.X + 2, lastLocation.Y),
+                        Location = new System.Drawing.Point(lastLocation.X + _labelWidth + 2, lastLocation.Y),
                         Format = DateTimePickerFormat.Short,
-                        Value = ctr.InitialValue != null ? DateTime.Parse(ctr.InitialValue.ToString()) : DateTime.Now
+                        Value = ctr.InitialValue != null ? DateTime.Parse(ctr.InitialValue.ToString()) : DateTime.Now,
+                        Width = _controlWidth
                     };
 
                     _returnValues.Add(ctr.Key, null);
@@ -101,8 +112,9 @@ namespace WindowsForms
                     {
                         Tag = ctr.Key,
                         Name = ctr.Name,
-                        Location = new System.Drawing.Point(lastLocation.X + 2, lastLocation.Y),
-                        Checked = ctr.InitialValue != null ? Convert.ToBoolean(ctr.InitialValue) : false
+                        Location = new System.Drawing.Point(lastLocation.X + _labelWidth + 2, lastLocation.Y),
+                        Checked = ctr.InitialValue != null ? Convert.ToBoolean(ctr.InitialValue) : false,
+                        Width = _controlWidth
                     };
 
                     _returnValues.Add(ctr.Key, null);

@@ -70,7 +70,7 @@ namespace WindowsForms
         /// </summary>
         public void ShowDialog()
         {
-            _DynamicForm = new DynamicForm(DynamicControls) { Text = Text, Height = 800, Width = 600 };
+            _DynamicForm = new DynamicForm(DynamicControls) { Text = Text };
             _DynamicForm.ShowDialog();
         }
 
