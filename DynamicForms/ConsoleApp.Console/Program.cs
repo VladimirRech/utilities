@@ -39,8 +39,9 @@ namespace ConsoleApp.Console
             sb.AppendLine("    \"label\":\"Campo múltipla escolha\",");
             sb.AppendLine("    \"initialValue\":\"1\",");
             sb.AppendLine("    \"bindingSource\": {");
-            sb.AppendLine("        \"connection\":\"Data source=local; Initial catalog=databasename; Integrated security=true;\",");
-            sb.AppendLine("        \"sql\":\"SELECT ID, NAME FROM USERS ORDER BY NAME\",");
+            //sb.AppendLine("        \"connection\":\"Data source=localhost\\sqlexpress2014; Initial catalog=adventureworks2012; Integrated security=true;\",");
+            sb.AppendFormat("      \"connection\":\"Data source={0}; Initial catalog=adventureworks2012; Integrated security=true;\", ", @"localhost\\sqlexpress2014");
+            sb.AppendLine("        \"sql\":\"select id, name from programmers order by name\",");
             sb.AppendLine("        \"keyValue\":\"id\",");
             sb.AppendLine("        \"displayValue\":\"name\"");
             sb.AppendLine("  }}]");

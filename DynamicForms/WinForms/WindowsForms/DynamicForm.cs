@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Windows.Forms;
 
 namespace WindowsForms
@@ -16,6 +17,7 @@ namespace WindowsForms
         public DynamicForm(List<DynamicControl> dynamicControls)
         {
             InitializeComponent();
+            Application.EnableVisualStyles();
             _dynamicControls = dynamicControls;
             _returnValues = new Dictionary<string, object>();
         }
@@ -36,8 +38,8 @@ namespace WindowsForms
             lastLocation.X += 5;
             lastLocation.Y += 5;
             int controlsTotalHeight = panel1.Height;
-            
-            foreach(DynamicControl ctr in _dynamicControls)
+
+            foreach (DynamicControl ctr in _dynamicControls)
             {
                 var lbl = new Label { Text = ctr.Label, Width = _labelWidth, AutoSize = false, Location = lastLocation };
                 var winCtr = GetControl(ctr, lastLocation);
@@ -66,7 +68,7 @@ namespace WindowsForms
                     {
                         Tag = ctr.Key,
                         Name = ctr.Name,
-                        Location = new System.Drawing.Point(lastLocation.X + _labelWidth+ 2, lastLocation.Y),
+                        Location = new System.Drawing.Point(lastLocation.X + _labelWidth + 2, lastLocation.Y),
                         Text = ctr.InitialValue.ToString(),
                         Width = _controlWidth
                     };
@@ -80,14 +82,25 @@ namespace WindowsForms
                         Tag = ctr.Key,
                         Name = ctr.Name,
                         Location = new System.Drawing.Point(lastLocation.X + _labelWidth + 2, lastLocation.Y),
-                        Width = _controlWidth
+                        Width = _controlWidth,
+                        DropDownStyle = ComboBoxStyle.DropDownList
                     };
 
                     _returnValues.Add(ctr.Key, null);
 
-                    if (ctr.BindingSource != null && ctr.BindingSource.Items != null)
+                    if (ctr.BindingSource != null)
                     {
-                        (winCtl as ComboBox).Items.AddRange(ctr.BindingSource.Items.ToArray());
+                        if (ctr.BindingSource.Items != null)
+                        {
+                            (winCtl as ComboBox).Items.AddRange(ctr.BindingSource.Items.ToArray());
+                        }
+                        else if (!string.IsNullOrEmpty(ctr.BindingSource.ConnectionString) &&
+                          !string.IsNullOrEmpty(ctr.BindingSource.DisplayValue) &&
+                          !string.IsNullOrEmpty(ctr.BindingSource.KeyValue) &&
+                          !string.IsNullOrEmpty(ctr.BindingSource.Sql))
+                        {
+                            ConfigComboBoxBinding(ctr.BindingSource.ConnectionString, ctr.BindingSource.Sql, ctr.BindingSource.KeyValue, ctr.BindingSource.DisplayValue, (winCtl as ComboBox));
+                        }
                     }
 
                     return winCtl;
@@ -123,6 +136,21 @@ namespace WindowsForms
             }
 
             return winCtl;
+        }
+
+        private void ConfigComboBoxBinding(string connectionString, string sql, string keyValue, string displayValue, ComboBox cb)
+        {
+            using (DataTable dt = DataConnection.GetDataTable(connectionString, sql))
+            {
+                if (dt == null)
+                {
+                    return;
+                }
+
+                cb.DisplayMember = displayValue;
+                cb.ValueMember = keyValue;
+                cb.DataSource = dt.DefaultView;
+            }
         }
     }
 }
