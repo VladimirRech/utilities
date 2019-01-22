@@ -79,9 +79,14 @@ namespace WindowsForms
         /// </summary>
         /// <param name="key">Key used to get the value.</param>
         /// <returns>Value entered in the form control.</returns>
-        public object GetValueByKey(string key)
+        public string GetValueByKey(string key)
         {
-            return null;
+            return _DynamicForm.GetValueByey(key);
+        }
+
+        public Dictionary<string, string> GetAllReturnValues()
+        {
+            return _DynamicForm.dicReturnValues;
         }
     }
 }

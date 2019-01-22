@@ -2,13 +2,19 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace WindowsForms
 {
     public partial class DynamicForm : Form
     {
+        public Dictionary<string, string> dicReturnValues
+        {
+            get { return _returnValues; }
+        }
+
         List<DynamicControl> _dynamicControls;
-        Dictionary<string, object> _returnValues;
+        Dictionary<string, string> _returnValues;
         int _labelWidth = 150;
         int _controlWidth = 350;
         int _panelOffset = 20;
@@ -19,10 +25,10 @@ namespace WindowsForms
             InitializeComponent();
             Application.EnableVisualStyles();
             _dynamicControls = dynamicControls;
-            _returnValues = new Dictionary<string, object>();
+            _returnValues = new Dictionary<string, string>();
         }
 
-        public object GetValueByey(string key)
+        public string GetValueByey(string key)
         {
             return _returnValues.ContainsKey(key) ? _returnValues[key] : null;
         }
@@ -150,6 +156,45 @@ namespace WindowsForms
                 cb.DisplayMember = displayValue;
                 cb.ValueMember = keyValue;
                 cb.DataSource = dt.DefaultView;
+            }
+        }
+
+        private void DynamicForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (DialogResult == DialogResult.Yes)
+            {
+                FillReturnValues();
+            }
+        }
+
+        private void FillReturnValues()
+        {
+            foreach(Control ctl in panel1.Controls)
+            {
+                if (ctl.Tag == null ||!_returnValues.ContainsKey(ctl.Tag.ToString()))
+                {
+                    continue;
+                }
+
+                if (ctl is ComboBox)
+                {
+                    _returnValues[ctl.Tag.ToString()] = (ctl as ComboBox).SelectedValue.ToString();
+                }
+
+                if (ctl is TextBox)
+                {
+                    _returnValues[ctl.Tag.ToString()] = (ctl as TextBox).Text;
+                }
+
+                if (ctl is CheckBox)
+                {
+                    _returnValues[ctl.Tag.ToString()] = (ctl as CheckBox).Checked.ToString();
+                }
+
+                if (ctl is DateTimePicker)
+                {
+                    _returnValues[ctl.Tag.ToString()] = (ctl as DateTimePicker).Text;
+                }
             }
         }
     }

@@ -15,6 +15,16 @@ namespace ConsoleApp.Console
             string error = "";
             var df = DynamicDialog.GetFromJson(json, out error);
             df.ShowDialog();
+
+            Dictionary<string, string> dic = df.GetAllReturnValues();
+
+            if (dic != null)
+            {
+                foreach (var key in dic.Keys)
+                {
+                    System.Console.WriteLine("Key [{0}], Value: {1}", key, dic[key]);
+                }
+            }
         }
 
         static string GetCorrectJson()

@@ -75,6 +75,7 @@
             this.Controls.Add(this.btnOk);
             this.Name = "DynamicForm";
             this.Text = "DynamicForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DynamicForm_FormClosing);
             this.Load += new System.EventHandler(this.DynamicForm_Load);
             this.ResumeLayout(false);
 
