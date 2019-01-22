@@ -111,7 +111,7 @@ namespace WindowsForms
 
                     return winCtl;
 
-                case "DataTime":
+                case "DateTime":
                     winCtl = new DateTimePicker
                     {
                         Tag = ctr.Key,

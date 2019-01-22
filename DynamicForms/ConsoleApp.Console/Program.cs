@@ -24,6 +24,9 @@ namespace ConsoleApp.Console
                 {
                     System.Console.WriteLine("Key [{0}], Value: {1}", key, dic[key]);
                 }
+
+                System.Console.Write("Pressione ENTER...");
+                System.Console.ReadLine();
             }
         }
 
@@ -41,6 +44,20 @@ namespace ConsoleApp.Console
             sb.AppendLine("    \"key\":\"text1\",");
             sb.AppendLine("    \"label\":\"Campo texto\",");
             sb.AppendLine("    \"initialValue\":\"Some text\"");
+            sb.AppendLine("  },");
+            sb.AppendLine("  {");
+            sb.AppendLine("    \"name\":\"chkCheck1\",");
+            sb.AppendLine("    \"type\":\"CheckBox\",");
+            sb.AppendLine("    \"key\":\"check1\",");
+            sb.AppendLine("    \"label\":\"Campo Lógico\",");
+            sb.AppendLine("    \"initialValue\":\"false\"");
+            sb.AppendLine("  },");
+            sb.AppendLine("  {");
+            sb.AppendLine("    \"name\":\"dtDate\",");
+            sb.AppendLine("    \"type\":\"DateTime\",");
+            sb.AppendLine("    \"key\":\"date1\",");
+            sb.AppendLine("    \"label\":\"Data inicial\",");
+            sb.AppendLine("    \"initialValue\":\"2019-01-22\"");
             sb.AppendLine("  },");
             sb.AppendLine("  {");
             sb.AppendLine("    \"name\":\"cboName\",");
