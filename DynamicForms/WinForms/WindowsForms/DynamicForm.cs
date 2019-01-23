@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
-using System.Linq;
 
 namespace WindowsForms
 {
@@ -28,16 +27,33 @@ namespace WindowsForms
             _returnValues = new Dictionary<string, string>();
         }
 
+        #region public methods
         public string GetValueByey(string key)
         {
             return _returnValues.ContainsKey(key) ? _returnValues[key] : null;
         }
 
+        #endregion
+
+        #region events methods
         private void DynamicForm_Load(object sender, System.EventArgs e)
         {
             CreateDynamicControls();
         }
 
+        private void DynamicForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (DialogResult == DialogResult.Yes)
+            {
+                FillReturnValues();
+            }
+        }
+        #endregion
+
+        #region private methods
+        /// <summary>
+        /// Read data and create controls.
+        /// </summary>
         private void CreateDynamicControls()
         {
             System.Drawing.Point lastLocation = new System.Drawing.Point(panel1.Location.X, panel1.Location.Y);
@@ -63,6 +79,12 @@ namespace WindowsForms
             Width = _labelWidth + _controlWidth + (_controlOffset * 2) + (_panelOffset * 5);
         }
 
+        /// <summary>
+        /// Return control to be inserted in the form
+        /// </summary>
+        /// <param name="ctr"></param>
+        /// <param name="lastLocation"></param>
+        /// <returns></returns>
         private Control GetControl(DynamicControl ctr, System.Drawing.Point lastLocation)
         {
             Control winCtl = null;
@@ -144,6 +166,14 @@ namespace WindowsForms
             return winCtl;
         }
 
+        /// <summary>
+        /// Configur combo box data binding
+        /// </summary>
+        /// <param name="connectionString"></param>
+        /// <param name="sql"></param>
+        /// <param name="keyValue"></param>
+        /// <param name="displayValue"></param>
+        /// <param name="cb"></param>
         private void ConfigComboBoxBinding(string connectionString, string sql, string keyValue, string displayValue, ComboBox cb)
         {
             using (DataTable dt = DataConnection.GetDataTable(connectionString, sql))
@@ -159,19 +189,14 @@ namespace WindowsForms
             }
         }
 
-        private void DynamicForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (DialogResult == DialogResult.Yes)
-            {
-                FillReturnValues();
-            }
-        }
-
+        /// <summary>
+        /// Send control values and text to return dictionary.
+        /// </summary>
         private void FillReturnValues()
         {
-            foreach(Control ctl in panel1.Controls)
+            foreach (Control ctl in panel1.Controls)
             {
-                if (ctl.Tag == null ||!_returnValues.ContainsKey(ctl.Tag.ToString()))
+                if (ctl.Tag == null || !_returnValues.ContainsKey(ctl.Tag.ToString()))
                 {
                     continue;
                 }
@@ -193,9 +218,10 @@ namespace WindowsForms
 
                 if (ctl is DateTimePicker)
                 {
-                    _returnValues[ctl.Tag.ToString()] = (ctl as DateTimePicker).Text;
+                    _returnValues[ctl.Tag.ToString()] = (ctl as DateTimePicker).Value.ToString("yyyy-MM-dd HH:mm:ss");
                 }
             }
-        }
+        } 
+        #endregion
     }
 }
