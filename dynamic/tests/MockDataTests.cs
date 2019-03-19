@@ -77,5 +77,28 @@ namespace tests
             Assert.IsNotNull(din);
             Trace.Write(din.ToString());
         }
+
+        [TestMethod]
+        public void TestCannotQueryInAnotherClass()
+        {
+            var lst = MockData.GetList();
+            Assert.IsNotNull(lst);
+            Assert.IsTrue(lst.Count > 0);
+            string errorMessage = null;
+            object din = null;
+
+            try
+            {
+                din = AnotherClass.QueryList(lst, 3);
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+            }
+
+            // you can query when using another class, same project
+            Assert.IsNull(errorMessage);
+            Assert.IsNotNull(din);
+        }
     }
 }
