@@ -22,12 +22,8 @@ namespace Extensions
 
             while (canCompare && obj == null && i < lst.Count)
             {
-                obj = lst[i].GetType()
-                    .GetProperty(comparePropertyName)
-                    .GetValue(lst[0], null).ToString() == compareValue ?
-                        lst[i].GetType()
-                            .GetProperty(valuePropertyName)
-                            .GetValue(lst[i], null) : 
+                obj = lst[i].GetType().GetProperty(comparePropertyName).GetValue(lst[i], null).ToString() == compareValue ?
+                        lst[i].GetType().GetProperty(valuePropertyName).GetValue(lst[i], null) : 
                         null;
                 i++;
             }

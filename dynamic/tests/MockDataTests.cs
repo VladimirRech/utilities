@@ -44,7 +44,7 @@ namespace tests
 
             try
             {
-                din = lst.Where(obj => obj.Id == 1).FirstOrDefault();
+                din = lst.Where(obj => obj.Id == 3).FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -66,7 +66,7 @@ namespace tests
 
             try
             {
-                din = lst.GetValueFromDynamicList("Id", "Name", "1");
+                din = lst.GetValueFromDynamicList("Id", "Name", "3");
             }
             catch (Exception ex)
             {
