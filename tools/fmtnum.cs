@@ -9,11 +9,10 @@ public class program {
 	public static void Main(string[] args){
 		if (args.Length != 2) {
 			Console.WriteLine(_error);
-			return;
-		}
-		else if (_help_sign.Contains(args[0])){
-			Console.WriteLine(_error);
-			Console.WriteLine(_help);
+
+		 	if (args.Length == 1 && _help_sign.Contains(args[0]))
+				Console.WriteLine(_help);
+
 			return;
 		}
 	}
