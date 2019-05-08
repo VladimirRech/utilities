@@ -16,4 +16,35 @@ public class program {
 			return;
 		}
 	}
+
+
+	/// <summary>
+        /// Formats the string according to the specified mask. 
+        /// Source: http://www.extensionmethod.net/1981/csharp/string/formatwithmask
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <param name="mask">The mask for formatting. Like "A##-##-T-###Z"</param>
+        /// <returns>The formatted string</returns>
+        public static string FormatWithMask(this string input, string mask)
+        {
+            if (String.IsNullOrEmpty(input)) return input;
+
+            var output = string.Empty;
+            var index = 0;
+
+            foreach (var m in mask)
+            {
+                if (m == '#')
+                {
+                    if (index < input.Length)
+                    {
+                        output += input[index];
+                        index++;
+                    }
+                }
+                else
+                    output += m;
+            }
+            return output;
+        }
 }
