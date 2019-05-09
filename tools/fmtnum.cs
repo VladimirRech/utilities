@@ -15,6 +15,8 @@ public class program {
 
 			return;
 		}
+
+		Console.WriteLine(FormatWithMask(args[0], args[1]));
 	}
 
 
@@ -25,9 +27,10 @@ public class program {
         /// <param name="input">The input string.</param>
         /// <param name="mask">The mask for formatting. Like "A##-##-T-###Z"</param>
         /// <returns>The formatted string</returns>
-        public static string FormatWithMask(this string input, string mask)
+        static string FormatWithMask(string input, string mask)
         {
-            if (String.IsNullOrEmpty(input)) return input;
+            if (String.IsNullOrEmpty(input)) 
+		    return input;
 
             var output = string.Empty;
             var index = 0;
