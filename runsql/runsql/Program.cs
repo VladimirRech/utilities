@@ -8,25 +8,23 @@ namespace runsql
     class Program
     {
         static string[] _help = new string[] { "/?", "-h", "-help" };
-        static string[] _validOperations = new string[] { "-exec", "-query" };
+        static string[] _validOperations = new string[] { "-exec", "-query", "-qryfile" };
+        static string _usage = "Uso\r\n\t" +
+                               "runsql -exec file.sql server database userid password\r\n\r\n\t" +
+                               "runsql -query file.sql server database userid password delimiter\r\n\r\n\t" +
+                               "runsql -qryfile file.sql server database userid password delimiter\r\n\r\n\t";
+        static string _openningTitle = "Abrindo conexão";
+        static string _preparingTitle = "Preparando";
+        static string _openningFileTitle = "Abrindo arquivo";
+        static string _readingRowTitle = "Lendo linha ";
+        static string _executingTitle = "Executando linha: {0:000000}";
+
         static void Main(string[] args)
         {
-            /* Uso 
-             * 
-             * runsql -exec file.sql server database userid password
-             * 
-             * runsql -query file.sql server database userid password delimiter
-             * 
-             * 
-             */
             if (args.Length == 0 || _help.Contains(args[0]) || !_validOperations.Contains(args[0]) || (args[0] == "-query" &&  args.Length != 7) ||
                 (args[0] == "-query" && args.Length < 6))
             {
-                Console.WriteLine(@"Uso 
-
-    runsql -exec file.sql server database userid password
-
-    runsql -query file.sql server database userid password delimiter");
+                Console.WriteLine(_usage);
                 return;
             }
 
@@ -40,29 +38,38 @@ namespace runsql
                 "User id={2}; password={3}", serverName, database, user, pass);
             int counter = 1;
 
-            if (args[0].ToLower() == "-exec")
-                exec(fileName, connString, counter);
-            else
-                query(fileName, connString, counter, separator);
-
-            Console.WriteLine("Concluído");
+            switch (args[0].ToLower())
+            {
+                case "-exec":
+                    exec(fileName, connString, counter);
+                    Console.WriteLine("Concluído");
+                    break;
+                case "-query":
+                    query(fileName, connString, counter, separator);
+                    break;
+                case "-qryfile":
+                    qryfile(fileName, connString, counter, separator);
+                    break;
+                default:
+                    break;
+            }
         }
 
         private static void query(string fileName, string connString, int counter, string separator)
         {
-            Console.Title = "Preparando conexão";
+            Console.Title = _preparingTitle;
             using (var con = new SqlConnection(connString))
             {
-                Console.Title = "Abrindo conexão";
+                Console.Title = _openningTitle;
                 con.Open();
 
-                Console.Title = "Abrindo arquivo";
+                Console.Title = _openningFileTitle;
 
                 using (var f = System.IO.File.OpenText(fileName))
                 {
                     while (f.Peek() > -1)
                     {
-                        Console.Title = "Lendo linha " + counter.ToString();
+                        Console.Title = _readingRowTitle + counter.ToString();
                         using (SqlDataAdapter da = new SqlDataAdapter(f.ReadLine(), con))
                         {
                             try
@@ -96,13 +103,13 @@ namespace runsql
 
         private static void exec(string fileName, string connString, int counter)
         {
-            Console.Title = "Abrindo conexão.";
+            Console.Title = _openningTitle;
 
             using (var con = new SqlConnection(connString))
             {
                 con.Open();
 
-                Console.Title = "Abrindo arquivo de texto.";
+                Console.Title = _openningFileTitle;
 
                 using (var f = System.IO.File.OpenText(fileName))
                 {
@@ -132,5 +139,64 @@ namespace runsql
                 con.Close();
             }
         }
+
+        /// <summary>
+        /// Executa o arquivo inteiro como uma única consulta
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="connString"></param>
+        /// <param name="counter"></param>
+        /// <param name="separator"></param>
+        private static void qryfile(string fileName, string connString, int counter, string separator)
+        {
+            Console.Title = _preparingTitle;
+            using (var con = new SqlConnection(connString))
+            {
+                Console.Title = _openningTitle;
+                con.Open();
+                Console.Title = _openningFileTitle;
+                string fileContent = System.IO.File.ReadAllText(fileName);
+                Console.Title = _readingRowTitle + counter.ToString();
+
+                using (SqlDataAdapter da = new SqlDataAdapter(fileContent, con))
+                {
+                    try
+                    {
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            Console.Title = String.Format(_readingRowTitle, i + 1);
+
+                            if (i == 0)
+                            {
+                                for (int colIndex = 0; colIndex < dt.Columns.Count; colIndex++)
+                                    Console.Write("{0}{1}", dt.Columns[colIndex].ColumnName, separator);
+
+
+                                Console.Write(Environment.NewLine);
+                            }
+
+                            for (int j = 0; j < dt.Columns.Count; j++)
+                            {
+                                Console.Write("{0}{1}", dt.Rows[i][j], separator);
+                            }
+
+                            Console.Write(Environment.NewLine);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+
+                    counter++;
+                }
+
+                con.Close();
+            }
+        }
+
     }
 }
