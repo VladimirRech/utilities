@@ -53,4 +53,11 @@ prices['Banana'] += 1
 
 # Obtendo a lista de chaves
 prices.keys()
+
+# Verificando se a chave existe
+fruit = 'Peach'
+if fruit in prices:
+   prices[fruit] += 1
+else:
+   prices[fruit] = 1
 ```
