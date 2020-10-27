@@ -44,4 +44,13 @@ for i, item in enumerate(myList):
 prices = { 'Orange': 4, 'Banana': 3.5, 'Apple': 6, 'Pine Apple': 6.66 }
 
 # Adicionando uma chave
+prices['Avocado'] = 10
+# {'Orange': 4, 'Banana': 4.5, 'Apple': 6, 'Pine Apple': 6.66, 'Avocado': 10}
+
+# Acessando os valores
+print(prices['Avocado']
+prices['Banana'] += 1
+
+# Obtendo a lista de chaves
+prices.keys()
 ```
